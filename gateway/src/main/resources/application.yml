@@ -1,0 +1,110 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.web.HttpLogging: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty: DEBUG
+
+
+spring:
+  application:
+    name: gateway
+  autoconfigure:
+    # TODO: remove when fixed https://github.com/spring-projects/spring-security/issues/6314
+    exclude: org.springframework.boot.actuate.autoconfigure.security.reactive.ReactiveManagementWebSecurityAutoConfiguration
+  thymeleaf:
+    cache: false
+  cloud:
+    #    globalcors:
+    #      corsConfigurations:
+    #        '[/**]':
+    #          allowedOrigins: "http://localhost:9080"
+    gateway:
+      default-filters:
+#        - TokenRelay
+        httpclient:
+          wiretap: true
+        httpserver:
+          wiretap: true
+      routes:
+        - id: expense-service
+          uri: lb://expense-service
+          predicates:
+            - Path=/expense-service/**
+          filters:
+            - StripPrefix=1
+#            - TokenRelay=
+        #        - RemoveRequestHeader=Cookie
+        - id: aggregate-service
+          uri: lb://aggregate-service
+          predicates:
+            - Path=/aggregate-service/**
+          filters:
+            - StripPrefix=1
+#            - TokenRelay=
+    #        - RemoveRequestHeader=Cookie
+
+
+
+
+
+
+  security:
+    oauth2:
+#      clients:
+#        gateway:
+#          name: gateway
+#          secret: secret
+#          authorized-grant-types: authorization_code
+#          scope: openid,profile,email,resource.read
+#          authorities: uaa.resource
+#          redirect-uri: http://localhost:8080/login/oauth2/code/gateway
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8090/uaa/token_keys
+      client:
+##        jwt:
+##          jwk-set-uri: http://localhost:8090/uaa/token_keys
+        registration:
+          gateway:
+            provider: uaa
+            client-id: gateway
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid,profile,email,resource.read,uaa.user
+        provider:
+          uaa:
+            authorization-uri: http://localhost:8090/uaa/oauth/authorize
+            token-uri: http://localhost:8090/uaa/oauth/token
+            user-info-uri: http://localhost:8090/uaa/userinfo
+            user-name-attribute: sub
+            jwk-set-uri: http://localhost:8090/uaa/token_keys
+#            # authorization-uri: http://localhost:8090/uaa/oauth/authorize
+#            # token-uri: http://uaa:8090/uaa/oauth/token
+#            # user-info-uri: http://uaa:8090/uaa/userinfo
+#            # user-name-attribute: sub
+#            # jwk-set-uri: http://uaa:8090/uaa/token_keys
+
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: resource
+#          uri: http://resource:9000
+#          predicates:
+#            - Path=/resource
+#          filters:
+#            - TokenRelay=
+#            - RemoveRequestHeader=Cookie
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}

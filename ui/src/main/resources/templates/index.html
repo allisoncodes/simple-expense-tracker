@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html lang = "en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Expense Tracker</title>
+  <meta charset = "UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+  <!-- Custom styles for this template -->
+  <link href="css/landing-page.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/simple-expense-tracker.css" rel="stylesheet">
+
+
+<!--  Fontawesome -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+
+
+  <!-- Chart.js -->
+  <script src="js/Chart.min.js"></script>
+</head>
+<body>
+<!--   Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Simple Expense Tracker</a>
+
+      <form th:if="${authenticated}" class="navbar-form" th:action="@{/logout}" method="post">
+        <input class="form-control" type="submit" value="Sign Out"/>
+      </form>
+<!--      <form th:if="${!authenticated}" class="navbar-form" th:action="@{/login}" method="post">-->
+<!--        <input class="form-control" type="submit" value="Sign In"/>-->
+<!--      </form>-->
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/expenses">Expenses</a>
+          </li>
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link" href="#">Documentation</a>-->
+<!--          </li>-->
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link" href="#">Contact</a>-->
+<!--          </li>-->
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="bg-primary py-5 mb-5">
+    <div class="container h-100">
+      <div class="row h-100 align-items-center">
+        <div class="col-lg-12">
+          <h1 class="display-4 text-white mt-5 mb-2">Track Monthly Expenses</h1>
+          <p class="lead mb-5 text-white-50">Stay on budget each month. See how your money is spent.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Icons Grid -->
+  <section class="features-icons bg-light text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <i class="icon-grid m-auto text-primary"></i>
+            </div>
+            <h3>Microservices</h3>
+            <p class="lead mb-0">Spring MVC UI powered by RESTful API Microservices.</p>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <i class="icon-settings m-auto text-primary"></i>
+            </div>
+            <h3>Spring Boot</h3>
+            <p class="lead mb-0">Easy configuration with Spring Boot.</p>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <i class="icon-cloud-upload m-auto text-primary"></i>
+            </div>
+            <h3>AWS</h3>
+            <p class="lead mb-0">Deployed to the cloud on AWS.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Image Showcases -->
+  <section class="showcase">
+    <div class="container-fluid p-0">
+      <div class="row no-gutters">
+
+        <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-repeat: no-repeat; background-size: contain; background-image: url('images/microservice.png');"></div>
+        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+          <h2>Microservices Architecture</h2>
+          <p class="lead mb-0">Spring MVC User Interface decouples business logic from presentation logic.
+            2 RESTful Microservices provide data and algorithms.  API Gateway routes calls to Microservices.
+            Services registered with Netflix Eureka.  Secured by JWT tokens.</p>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-lg-6 text-white showcase-img" style="background-repeat: no-repeat; background-size: contain; background-image: url('images/spring-boot-project-logo.png');"></div>
+        <div class="col-lg-6 my-auto showcase-text">
+          <h2>Spring Boot</h2>
+          <p class="lead mb-0">Implements auto configuration and Component scanning.
+          Uses starter dependencies for simple build configuration.</p>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-repeat: no-repeat; background-size: contain; background-image: url('images/icon-cloud-aws.png');"></div>
+        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+          <h2>Deployed to AWS</h2>
+          <p class="lead mb-0">High availability using EC2 instances.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

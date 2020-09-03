@@ -1,0 +1,33 @@
+server:
+  port: 8083
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+
+expense-service:
+  locator: expense-service
+gateway:
+  locator: gateway
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://uaa:8090/uaa/oauth/token
+          jwk-set-uri: http://localhost:8090/uaa/token_keys
+  application:
+    name: aggregate-service
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.web.HttpLogging: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty: DEBUG

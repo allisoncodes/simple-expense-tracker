@@ -1,0 +1,80 @@
+server:
+  port: 9080
+
+expense-service:
+  locator: expense-service
+aggregate-service:
+  locator: aggregate-service
+gateway:
+  locator: gateway
+
+jwt:
+  security:
+    key: zab23bc8934gh=1
+  token:
+    validity: 1800000
+
+spring:
+  application:
+    name: ui #gateway
+#  autoconfigure:
+#     TODO: remove when fixed https://github.com/spring-projects/spring-security/issues/6314
+#    exclude: org.springframework.boot.actuate.autoconfigure.security.reactive.ReactiveManagementWebSecurityAutoConfiguration
+
+  security:
+    oauth2:
+      resourceserver:
+#        authenticationEntryPoint:
+#          token-uri: http://localhost:8090/uaa/oauth/token
+        jwt:
+          issuer-uri: http://uaa:8090/uaa/oauth/token
+          jwk-set-uri: http://localhost:8090/uaa/token_keys
+          #redirect-uri-template: http://localhost:8090/login/oauth2/code/gateway
+
+#      client:
+#        registration:
+#          gateway:
+#            provider: uaa
+#            client-id: gateway
+#            client-secret: secret
+#            authorization-grant-type: authorization_code
+#            redirect-uri-template: http://localhost:9080/expenses #http://localhost:8080/login/oauth2/code/{registrationId}" #"{baseUrl}/login/oauth2/code/{registrationId}"
+#            scope: openid,profile,email,resource.read
+#        provider:
+#          uaa:
+#            authorization-uri: http://localhost:8090/uaa/oauth/authorize
+#            token-uri: http://localhost:8090/uaa/oauth/token
+#            user-info-uri: http://localhost:8090/uaa/userinfo
+#            user-name-attribute: sub
+#            jwk-set-uri: http://localhost:8090/uaa/token_keys
+##            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}" #"{baseUrl}/login/oauth2/code/{registrationId}"
+#            #redirect-uri-template: "/expenses"
+###            authorization-uri: http://localhost:8090/uaa/oauth/authorize
+###            token-uri: http://uaa:8090/uaa/oauth/token
+###            user-info-uri: http://uaa:8090/uaa/userinfo
+###            user-name-attribute: sub
+###            jwk-set-uri: http://uaa:8090/uaa/token_keys
+
+eureka:
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+
+logging:
+  level:
+    org:
+      apache:
+        client: DEBUG
+      httpclient:
+        wire: DEBUG
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
+      hobsoft:
+        spring:
+          resttemplatelogger:
+            LoggingCustomizer: DEBUG
+
+#logging.level.org.hobsoft.spring.resttemplatelogger.LoggingCustomizer = DEBUG
