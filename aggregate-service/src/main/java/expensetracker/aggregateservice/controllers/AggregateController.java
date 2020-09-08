@@ -3,13 +3,9 @@ package expensetracker.aggregateservice.controllers;
 import expensetracker.aggregateservice.model.Category;
 import expensetracker.aggregateservice.services.AggregateService;
 import expensetracker.aggregateservice.services.CategoryService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -34,7 +30,6 @@ public class AggregateController {
 
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String token = authentication.getToken().getTokenValue();//jwtUtils.generateJwtToken(authentication);
-
 
         Map<String, BigDecimal> aggregates = new HashMap<String, BigDecimal>();
 

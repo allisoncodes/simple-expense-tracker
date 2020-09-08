@@ -13,7 +13,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import javax.ws.rs.core.UriBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,8 +27,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Value("${gateway.locator}")
     private String gatewayLocator;
 
-    private String gatewayUrl;
-
     private final ExpenseCommandToExpense expenseCommandToExpense;
     private final RestTemplate restTemplate;
     private final EurekaClient discoveryClient;
@@ -43,17 +40,13 @@ public class ExpenseServiceImpl implements ExpenseService {
         this.discoveryClient = discoveryClient;
     }
 
-    @PostConstruct
-    private void init() {
-
-        InstanceInfo instance = discoveryClient.getNextServerFromEureka(gatewayLocator, false);
-        gatewayUrl = instance.getHomePageUrl();
-    }
-
     @Override
     public List<Expense> getExpenses(String token) {
 
         try {
+            InstanceInfo instance = discoveryClient.getNextServerFromEureka(gatewayLocator, false);
+            String gatewayUrl = instance.getHomePageUrl();
+
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
@@ -94,6 +87,9 @@ public class ExpenseServiceImpl implements ExpenseService {
         }
 
         try {
+            InstanceInfo instance = discoveryClient.getNextServerFromEureka(gatewayLocator, false);
+            String gatewayUrl = instance.getHomePageUrl();
+
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);

@@ -3,7 +3,6 @@ package expensetracker.ui.services;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import expensetracker.ui.model.Category;
-import expensetracker.ui.model.Expense;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -11,7 +10,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import javax.ws.rs.core.UriBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,8 +25,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Value("${gateway.locator}")
     private String gatewayLocator;
 
-    private String gatewayUrl;
-
     private final RestTemplate restTemplate;
     private final EurekaClient discoveryClient;
 
@@ -39,18 +35,13 @@ public class CategoryServiceImpl implements CategoryService {
         this.discoveryClient = discoveryClient;
     }
 
-    @PostConstruct
-    private void init() {
-
-        InstanceInfo instance = discoveryClient.getNextServerFromEureka(gatewayLocator, false);
-        gatewayUrl = instance.getHomePageUrl();
-
-    }
-
     @Override
     public List<Category> getCategories(String token) {
 
         try {
+            InstanceInfo instance = discoveryClient.getNextServerFromEureka(gatewayLocator, false);
+            String gatewayUrl = instance.getHomePageUrl();
+
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
@@ -85,6 +76,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategory(Long id, String token) {
 
         try {
+            InstanceInfo instance = discoveryClient.getNextServerFromEureka(gatewayLocator, false);
+            String gatewayUrl = instance.getHomePageUrl();
+
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);

@@ -2,7 +2,6 @@ package expensetracker.ui.services;
 
 
 import expensetracker.ui.commands.ExpenseCommand;
-import expensetracker.ui.dto.ExpenseDTO;
 import expensetracker.ui.model.Expense;
 
 import java.util.List;

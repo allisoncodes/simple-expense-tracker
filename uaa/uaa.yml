@@ -18,22 +18,20 @@ oauth:
       - approvals.me
       - oauth.approvals
   clients:
-    gateway:
-      name: gateway
+    ui:
+      name: ui
       secret: secret
-      authorized-grant-types: authorization_code
-      scope: openid,profile,email,resource.read
-      authorities:
-        - uaa.resource
+      authorized-grant-types: authorization_code,password
+      scope: openid,profile,email,resource.read,resource.write
+      authorities: uaa.resource
       redirect-uri: http://localhost:8080/login/oauth2/code/gateway
 
 scim:
   groups:
     email: Access your email address
     resource.read: Allow access with 'resource.read'
-    uaa.user: Allow access as user
   users:
-    - user1|password|user1@provider.com|first1|last1|uaa.user,profile,email,resource.read
+    - user1|password|user1@provider.com|first1|last1|uaa.user,profile,email,resource.read,resource.write
 
 jwt:
   token:

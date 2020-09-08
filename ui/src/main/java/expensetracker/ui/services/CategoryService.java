@@ -2,7 +2,6 @@ package expensetracker.ui.services;
 
 
 import expensetracker.ui.model.Category;
-
 import java.util.List;
 
 public interface CategoryService {

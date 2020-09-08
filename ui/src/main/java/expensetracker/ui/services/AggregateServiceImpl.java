@@ -9,7 +9,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import javax.ws.rs.core.UriBuilder;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -25,8 +24,6 @@ public class AggregateServiceImpl implements AggregateService {
     @Value("${gateway.locator}")
     private String gatewayLocator;
 
-    private String gatewayUrl;
-
     private final RestTemplate restTemplate;
     private final EurekaClient discoveryClient;
 
@@ -37,17 +34,12 @@ public class AggregateServiceImpl implements AggregateService {
         this.discoveryClient = discoveryClient;
     }
 
-    @PostConstruct
-    private void init() {
-
-        InstanceInfo instance = discoveryClient.getNextServerFromEureka(gatewayLocator, false);
-        gatewayUrl = instance.getHomePageUrl();
-
-    }
-
     public Map<String, BigDecimal> getAggregates(String token) {
 
         try {
+            InstanceInfo instance = discoveryClient.getNextServerFromEureka(gatewayLocator, false);
+            String gatewayUrl = instance.getHomePageUrl();
+
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);

@@ -18,7 +18,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://uaa:8090/uaa/oauth/token
-          jwk-set-uri: http://localhost:8090/uaa/token_keys
+          jwk-set-uri: http://uaa:8090/uaa/token_keys
   application:
     name: aggregate-service
 

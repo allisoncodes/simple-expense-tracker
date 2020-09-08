@@ -1,0 +1,48 @@
+version: '3'
+services:
+  uaa:
+    image: simple-expense-tracker/uaa
+    ports:
+      - 8090:8090
+  eureka-service:
+    image: simple-expense-tracker/registry
+    ports:
+      - 8761:8761
+  expense-service:
+    image: simple-expense-tracker/expense-service
+    ports:
+      - 8082:8082
+    environment:
+    - JAVA_OPTS=
+      -DEUREKA_SERVER=http://eureka-service:8761/eureka
+    depends_on:
+      - eureka-service
+  aggregate-service:
+    image: simple-expense-tracker/aggregate-service
+    ports:
+      - 8083:8083
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-service:8761/eureka
+    depends_on:
+      - eureka-service
+  ui:
+    image: simple-expense-tracker/ui
+    ports:
+      - 9080:9080
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-service:8761/eureka
+        -DOAUTH_URL=http://uaa:8090/uaa/oauth/token
+        -DJWK_SET_URI=http://uaa:8090/uaa/token_keys
+    depends_on:
+      - eureka-service
+  gateway:
+    image: simple-expense-tracker/gateway
+    ports:
+      - 8080:8080
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-service:8761/eureka
+    depends_on:
+      - eureka-service

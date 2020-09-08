@@ -20,25 +20,38 @@ public class HomeController {
     @RequestMapping({"", "/", "/index", "/index.html"})
     public String showExpenses(Model model) {
 
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         if (authorities
                 .stream()
                 .map(authority -> authority.getAuthority())
                 .anyMatch(n -> n.equals("ROLE_USER"))) {
+
             model.addAttribute("authenticated", true);
         } else {
             model.addAttribute("authenticated", false);
         }
 
-
-//        if (authentication.isAuthenticated()) {
-//            model.addAttribute("authenticated", true);
-//        } else {
-//            model.addAttribute("authenticated", false);
-//        }
-
         return "index";
+    }
+
+    @RequestMapping({"/how-to", "/how-to.html"})
+    public String showHowTo(Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        if (authorities
+                .stream()
+                .map(authority -> authority.getAuthority())
+                .anyMatch(n -> n.equals("ROLE_USER"))) {
+
+            model.addAttribute("authenticated", true);
+        } else {
+            model.addAttribute("authenticated", false);
+        }
+
+        return "how-to";
     }
 
 }

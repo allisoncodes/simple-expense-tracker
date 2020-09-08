@@ -1,6 +1,6 @@
 package expensetracker.aggregateservice.services;
 
-import com.netflix.appinfo.InstanceInfo;
+
 import com.netflix.discovery.EurekaClient;
 import expensetracker.aggregateservice.model.Category;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,23 +9,21 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.PostConstruct;
 import javax.ws.rs.core.UriBuilder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryServiceImpl implements
+        CategoryService,
+        TokenAuthenticatedService,
+        GatewayDiscoveryService {
 
     @Value("${expense-service.locator}")
     private String expenseServiceLocator;
 
     @Value("${gateway.locator}")
     private String gatewayLocator;
-
-    private String gatewayUrl;
 
     private final RestTemplate restTemplate;
     private final EurekaClient discoveryClient;
@@ -36,19 +34,13 @@ public class CategoryServiceImpl implements CategoryService {
         this.discoveryClient = discoveryClient;
     }
 
-    @PostConstruct
-    private void init() {
-        InstanceInfo instance = discoveryClient.getNextServerFromEureka(gatewayLocator, false);
-        this.gatewayUrl = instance.getHomePageUrl();
-    }
-
     @Override
     public List<Category> getCategories(String token) {
+
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-            HttpEntity<String> entity = new HttpEntity<>("body", headers);
+            String gatewayUrl = getGatewayUrl(discoveryClient, gatewayLocator);
+
+            HttpEntity<String> entity = getEntity(getHeaders(token));
 
             String uri = UriBuilder
                     .fromUri(gatewayUrl)
@@ -61,6 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
                     HttpMethod.GET,
                     entity,
                     new ParameterizedTypeReference<List<Category>>(){});
+
             if (record != null && record.hasBody()) {
                 return record.getBody();
             }
